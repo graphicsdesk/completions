@@ -1,0 +1,28 @@
+---
+title: "sketches"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Read in Data
+
+```{r}
+data <- readxl::read_excel("../Award-CIP4-Sex-RaceEth.xlsx") %>% 
+  select(-`[Institution Name]`) %>% 
+  rename(
+    CRED = `[Award Level Code]`,
+    CIP4 = `[CIP Code and Description (4 digit)]`,
+    race_eth = `[Race and Ethnicity]`,
+    sex = `[Sex]`    
+  ) %>% 
+  gather(year, count, `2017`:`1997`) %>% 
+  mutate(
+    count = as.numeric(count),
+    year = as.numeric(year)
+  )
+```
+
