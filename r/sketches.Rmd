@@ -8,7 +8,7 @@ library(tidyverse)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Read in Data
+# Read in data
 
 ```{r}
 data <- readxl::read_excel("../Award-CIP4-Sex-RaceEth.xlsx") %>% 
@@ -26,3 +26,23 @@ data <- readxl::read_excel("../Award-CIP4-Sex-RaceEth.xlsx") %>%
   )
 ```
 
+# Preliminary sketches
+
+```{r}
+AGGREGATE_STR <- "Total for selected values"
+
+data %>% 
+  filter(sex != AGGREGATE_STR & race_eth == AGGREGATE_STR) %>% 
+  filter(CRED == "Bachelor's degree") %>% 
+  ggplot(aes(year, count, color = sex)) +
+  geom_line() +
+  facet_wrap(~ CIP4, scales = "free_y") +
+  theme(
+    strip.background = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    axis.ticks = element_blank(),
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(colour = "grey90")
+  )
+```
