@@ -33,7 +33,7 @@ AGGREGATE_STR <- "Total for selected values"
 
 data %>% 
   filter(sex != AGGREGATE_STR & race_eth == AGGREGATE_STR) %>% 
-  filter(CRED == "Bachelor's degree") %>% 
+  filter(CRED == "Doctor's degree - research/scholarship") %>%
   ggplot(aes(year, count, color = sex)) +
   geom_line() +
   facet_wrap(~ CIP4, scales = "free_y") +
