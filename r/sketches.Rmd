@@ -32,7 +32,8 @@ AGGREGATE_STR <- "Total for selected values"
 get_top_fields <- function(top_n, cond = TRUE, narm = TRUE) {
   data %>%
     filter_(cond) %>% 
-    filter(CIP4 != AGGREGATE_STR) %>% group_by(CIP4) %>%
+    filter(CIP4 != AGGREGATE_STR) %>%
+    group_by(CIP4) %>%
     summarize(total = sum(count, na.rm = narm)) %>%
     arrange(-total) %>% 
     head(top_n) %>% 
@@ -44,11 +45,15 @@ get_top_fields <- function(top_n, cond = TRUE, narm = TRUE) {
 
 ```{r}
 data %>%
+  filter(CIP4 != AGGREGATE_STR) %>%
   filter(sex == AGGREGATE_STR & race_eth == AGGREGATE_STR) %>% 
   filter(CRED == "Bachelor's degree") %>%
+  # filter(CIP4 %in% get_top_fields(20, quote(CRED == "Bachelor's degree"), FALSE)) %>%
+  mutate(CIP4 = factor(CIP4, levels = get_top_fields(1000, quote(CRED == "Bachelor's degree")))) %>% 
+  filter(CIP4 %in% get_top_fields(25, quote(CRED == "Bachelor's degree"))) %>% 
   ggplot(aes(year, count)) +
   geom_line() +
-  facet_wrap(~ CIP4, scales = "free_y") +
+  facet_wrap(~ CIP4) +
   expand_limits(y = 0) +
   theme(
     strip.background = element_blank(),
@@ -58,6 +63,12 @@ data %>%
     panel.background = element_blank(),
     panel.grid.major.y = element_line(colour = "grey90")
   )
+
+data %>%
+  filter(sex == AGGREGATE_STR & race_eth == AGGREGATE_STR) %>% 
+  filter(CRED == "Bachelor's degree") %>%
+  filter(year == 2017) %>% 
+  arrange(-count)
 ```
 
 
